@@ -25,6 +25,17 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 	};
 }
 
+/*
+    Take in an object of search filters and use them to create an arary of SQL Where expressions and and array of values.
+    searchFilters is an object that should contain on or more of 3 fields: "name", "minEmployees" and/or "maxEmployees"
+
+    The minEmployees filter can't be larger than maxEmployees.
+
+    For each filter provided the value is added to the values array and the appropriate SQL statements is added to
+    the array of where expressions.
+
+    EX: {minEmployees: 6} --> {whereExpressions: [`WHERE num_employees >= $1`], values: [6]}
+*/
 function sqlForCompaniesFilters(searchFilters) {
 	let whereExpressions = [];
 	let queryValues = [];
