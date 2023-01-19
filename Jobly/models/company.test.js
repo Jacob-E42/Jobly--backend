@@ -81,12 +81,35 @@ describe("findAll", function () {
 			}
 		]);
 	});
-});
-
-/************************************** get some */
-describe("findSome", function () {
-	test("works: ", async function () {
-		let companies = await Company.findAll();
+	test("works: with filter", async function () {
+		let companies = await Company.findAll({ name: "C1" });
+		expect(companies).toEqual([
+			{
+				handle: "c1",
+				name: "C1",
+				description: "Desc1",
+				numEmployees: 1,
+				logoUrl: "http://c1.img"
+			}
+		]);
+		companies = await Company.findAll({ minEmployees: 3 });
+		expect(companies).toEqual([
+			{
+				handle: "c3",
+				name: "C3",
+				description: "Desc3",
+				numEmployees: 3,
+				logoUrl: "http://c3.img"
+			},
+			{
+				handle: "c4",
+				name: "Company1",
+				numEmployees: 10,
+				description: "Desc4",
+				logoUrl: "http://c1.img"
+			}
+		]);
+		companies = await Company.findAll({ name: "C", maxEmployees: 2 });
 		expect(companies).toEqual([
 			{
 				handle: "c1",
@@ -101,17 +124,11 @@ describe("findSome", function () {
 				description: "Desc2",
 				numEmployees: 2,
 				logoUrl: "http://c2.img"
-			},
-			{
-				handle: "c3",
-				name: "C3",
-				description: "Desc3",
-				numEmployees: 3,
-				logoUrl: "http://c3.img"
 			}
 		]);
 	});
 });
+
 /************************************** get */
 
 describe("get", function () {
