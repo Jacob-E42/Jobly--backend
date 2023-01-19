@@ -51,7 +51,19 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
 	try {
-		const companies = await Company.findAll();
+		let companies;
+		if (Object.keys(req.query).length !== 0) {
+			const acceptedParams = ["name", "minEmployees", "maxEmployees"];
+			const params = req.query;
+			console.log(params);
+			for (let param in params) {
+				if (!acceptedParams.includes(param)) return next(new BadRequestError("That is not a valid query parameter"));
+			}
+			companies = await Company.findAll(params);
+		} else {
+			companies = await Company.findAll();
+		}
+
 		return res.json({ companies });
 	} catch (err) {
 		return next(err);
