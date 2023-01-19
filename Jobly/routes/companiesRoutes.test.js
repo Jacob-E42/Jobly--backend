@@ -95,19 +95,20 @@ describe("GET /companies", function () {
 
 	describe("uses filters accurately", function () {
 		test("name filter works", async function () {
-			let resp = await request(app).get("/companies").query({ name: "C" });
-			expect(resp.body.length).toBe(4);
+			let resp = await request(app).get("/companies/").query({ name: "C" });
+			console.log(resp.body);
+			expect(resp.body.companies.length).toBe(4);
 			resp = await request(app).get("/companies").query({ name: "pan" });
-			expect(resp.body.length).toBe(1);
+			expect(resp.body.companies.length).toBe(1);
 			expect(resp.body).toEqual({
 				companies: [{ handle: "c4", name: "Company1", numEmployees: 10, description: "Desc4", logoUrl: "http://c1.img" }]
 			});
 			resp = await request(app).get("/companies").query({ name: "sss" });
-			expect(resp.body.length).toBe(0);
+			expect(resp.body.companies.length).toBe(0);
 		});
 		test("minEmployees filter works", async function () {
 			let resp = await request(app).get("/companies").query({ minEmployees: 3 });
-			expect(resp.body.length).toBe(2);
+			expect(resp.body.companies.length).toBe(2);
 			expect(resp.body).toEqual({
 				companies: [
 					{ handle: "c3", name: "C3", numEmployees: 3, description: "Desc3", logoUrl: "http://c3.img" },
@@ -115,11 +116,11 @@ describe("GET /companies", function () {
 				]
 			});
 			resp = await request(app).get("/companies").query({ minEmployees: 15 });
-			expect(resp.body.length).toBe(0);
+			expect(resp.body.companies.length).toBe(0);
 		});
 		test("maxEmployees filter works", async function () {
 			let resp = await request(app).get("/companies").query({ maxEmployees: 3 });
-			expect(resp.body.length).toBe(3);
+			expect(resp.body.companies.length).toBe(3);
 			expect(resp.body).toEqual({
 				companies: [
 					{
@@ -142,18 +143,11 @@ describe("GET /companies", function () {
 						description: "Desc3",
 						numEmployees: 3,
 						logoUrl: "http://c3.img"
-					},
-					{
-						handle: "c4",
-						name: "Company1",
-						numEmployees: 10,
-						description: "Desc4",
-						logoUrl: "http://c1.img"
 					}
 				]
 			});
 			resp = await request(app).get("/companies").query({ maxEmployees: 0 });
-			expect(resp.body.length).toBe(0);
+			expect(resp.body.companies.length).toBe(0);
 		});
 		test("minEmployees cannot be larger than maxEmployees", async function () {
 			let resp = await request(app).get("/companies").query({ minEmployees: 3, maxEmployees: 1 });
@@ -161,6 +155,7 @@ describe("GET /companies", function () {
 		});
 		test("request with inappropriate filters fails w/ 400", async function () {
 			let resp = await request(app).get("/companies").query({ pickles: "gerkin" });
+
 			expect(resp.statusCode).toEqual(400);
 		});
 	});
