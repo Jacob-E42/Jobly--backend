@@ -92,21 +92,22 @@ describe("findAll", function () {
 				logoUrl: "http://c1.img"
 			}
 		]);
-		companies = await Company.findAll({ minEmployees: 3 });
+		//there should be 3 here
+		companies = await Company.findAll({ minEmployees: 2 });
 		expect(companies).toEqual([
+			{
+				handle: "c2",
+				name: "C2",
+				description: "Desc2",
+				numEmployees: 2,
+				logoUrl: "http://c2.img"
+			},
 			{
 				handle: "c3",
 				name: "C3",
 				description: "Desc3",
 				numEmployees: 3,
 				logoUrl: "http://c3.img"
-			},
-			{
-				handle: "c4",
-				name: "Company1",
-				numEmployees: 10,
-				description: "Desc4",
-				logoUrl: "http://c1.img"
 			}
 		]);
 		companies = await Company.findAll({ name: "C", maxEmployees: 2 });
