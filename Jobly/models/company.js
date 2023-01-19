@@ -44,6 +44,7 @@ class Company {
 	 * */
 
 	static async findAll(filters = {}) {
+		//uses helper method to get a list of where expressions for each filter, and a list of corresponding values
 		const { whereExpressions, values } = sqlForCompaniesFilters(filters);
 		let query = `SELECT handle,
                   name,
@@ -52,6 +53,7 @@ class Company {
                   logo_url AS "logoUrl"
                   FROM companies`;
 
+		//if there are filters, they are added to the query
 		if (whereExpressions.length > 0) {
 			query += " WHERE " + whereExpressions.join(" AND ");
 		}

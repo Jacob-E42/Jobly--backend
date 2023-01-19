@@ -52,7 +52,9 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 router.get("/", async function (req, res, next) {
 	try {
 		let companies;
+		// if there are filters provided in the search query string
 		if (Object.keys(req.query).length !== 0) {
+			//only these filters are allowed, otherwise a BadRequestError is thrown
 			const acceptedParams = ["name", "minEmployees", "maxEmployees"];
 			const params = req.query;
 			for (let param in params) {
