@@ -43,20 +43,24 @@ class Company {
 	 * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
 	 * */
 
-	static async findAll(filters) {
-		if (filters) {
-			const { whereStatements, values } = sqlForCompaniesFilters(filters);
-		}
-		const companiesRes = await db.query(
-			`SELECT handle,
+	static async findAll(filters = {}) {
+		console.log(filters);
+		const { whereExpressions, values } = sqlForCompaniesFilters(filters);
+		console.log(whereExpressions, values);
+		let query = `SELECT handle,
                   name,
                   description,
                   num_employees AS "numEmployees",
                   logo_url AS "logoUrl"
-           FROM companies
-           ORDER BY name`
-		);
-		return companiesRes.rows;
+                  FROM companies`;
+
+		if (whereExpressions.length > 0) {
+			query += " WHERE " + whereExpressions.join(" AND ");
+		}
+		query += ` ORDER BY name`;
+		console.log(query);
+		const companies = await db.query(query, values);
+		return companies.rows;
 	}
 
 	static async findSome(name = null, minEmployees = null, maxEmployees = null) {}

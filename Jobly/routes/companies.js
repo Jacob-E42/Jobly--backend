@@ -55,7 +55,6 @@ router.get("/", async function (req, res, next) {
 		if (Object.keys(req.query).length !== 0) {
 			const acceptedParams = ["name", "minEmployees", "maxEmployees"];
 			const params = req.query;
-			console.log(params);
 			for (let param in params) {
 				if (!acceptedParams.includes(param)) return next(new BadRequestError("That is not a valid query parameter"));
 			}

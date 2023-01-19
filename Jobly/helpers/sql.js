@@ -25,8 +25,37 @@ function sqlForPartialUpdate(dataToUpdate, jsToSql) {
 	};
 }
 
-function sqlForCompaniesFilters(filters) {
-	const keys = Object.keys(filters);
-}
+function sqlForCompaniesFilters(searchFilters) {
+	let whereExpressions = [];
+	let queryValues = [];
 
+	const { minEmployees, maxEmployees, name } = searchFilters;
+
+	if (minEmployees > maxEmployees) {
+		throw new BadRequestError("Min employees cannot be greater than max");
+	}
+
+	// For each possible search term, add to whereExpressions and queryValues so
+	// we can generate the right SQL
+
+	if (minEmployees !== undefined) {
+		queryValues.push(minEmployees);
+		whereExpressions.push(`num_employees >= $${queryValues.length}`);
+	}
+
+	if (maxEmployees !== undefined) {
+		queryValues.push(maxEmployees);
+		whereExpressions.push(`num_employees <= $${queryValues.length}`);
+	}
+
+	if (name) {
+		queryValues.push(`%${name}%`);
+		whereExpressions.push(`name ILIKE $${queryValues.length}`);
+	}
+
+	return {
+		whereExpressions,
+		values: queryValues
+	};
+}
 module.exports = { sqlForPartialUpdate, sqlForCompaniesFilters };
