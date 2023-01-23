@@ -5,7 +5,7 @@ const request = require("supertest");
 const db = require("../db");
 const app = require("../app");
 
-const { commonBeforeAll, commonBeforeEach, commonAfterEach, commonAfterAll, u1Token } = require("./_testCommon");
+const { commonBeforeAll, commonBeforeEach, commonAfterEach, commonAfterAll, u1Token, adminToken } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
 beforeEach(commonBeforeEach);
@@ -23,8 +23,8 @@ describe("POST /companies", function () {
 		numEmployees: 10
 	};
 
-	test("ok for users", async function () {
-		const resp = await request(app).post("/companies").send(newCompany).set("authorization", `Bearer ${u1Token}`);
+	test("ok for admin users", async function () {
+		const resp = await request(app).post("/companies").send(newCompany).set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
 			company: newCompany
