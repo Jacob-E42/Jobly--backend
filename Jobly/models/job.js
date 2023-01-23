@@ -10,18 +10,20 @@ class Job {
 	 *
 	 * data should be { title, salary, equity, company_handle }
 	 *
-	 * Returns { title, salary, equity, company_handle }
+	 * Returns { id, title, salary, equity, company_handle }
 	 *
 	 * Throws BadRequestError if job already in database.
 	 * */
 
-	static async create({ id, title, salary, equity, company_handle }) {
+	static async create({ title, salary, equity, companyHandle }) {
+		console.log(companyHandle);
 		const duplicateCheck = await db.query(
 			`SELECT title
            FROM jobs
            WHERE title = $1 AND company_handle=$2`,
-			[title, company_handle]
+			[title, companyHandle]
 		);
+		console.log(duplicateCheck);
 
 		if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate job: ${title}`);
 
@@ -29,8 +31,8 @@ class Job {
 			`INSERT INTO jobs
            (title, salary, equity, company_handle )
            VALUES ($1, $2, $3, $4)
-           RETURNING id, title, salary, equity, company_handle AS 'companyHandle`,
-			[title, salary, equity, company_handle]
+           RETURNING id, title, salary, equity, company_handle AS "companyHandle"`,
+			[title, salary, equity, companyHandle]
 		);
 		const job = result.rows[0];
 
