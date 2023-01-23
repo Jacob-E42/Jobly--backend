@@ -69,4 +69,34 @@ function sqlForCompaniesFilters(searchFilters) {
 		values: queryValues
 	};
 }
-module.exports = { sqlForPartialUpdate, sqlForCompaniesFilters };
+
+function sqlForJobsFilters(searchFilters) {
+	let whereExpressions = [];
+	let queryValues = [];
+
+	const { title, minSalary, hasEquity } = searchFilters;
+
+	// For each possible search term, add to whereExpressions and queryValues so
+	// we can generate the right SQL
+
+	if (title !== undefined) {
+		queryValues.push(title);
+		whereExpressions.push(`num_employees >= $${queryValues.length}`);
+	}
+
+	if (minSalary !== undefined) {
+		queryValues.push(minSalary);
+		whereExpressions.push(`num_employees <= $${queryValues.length}`);
+	}
+
+	if (hasEquity !== undefined) {
+		queryValues.push(`%${hasEquity}%`);
+		whereExpressions.push(`name ILIKE $${queryValues.length}`);
+	}
+
+	return {
+		whereExpressions,
+		values: queryValues
+	};
+}
+module.exports = { sqlForPartialUpdate, sqlForCompaniesFilters, sqlForJobsFilters };
