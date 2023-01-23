@@ -17,32 +17,32 @@ describe("create", function () {
 	const newJob = {
 		title: "New Job",
 		salary: 50000,
-		equity: 0.0,
+		equity: "0.0",
 		companyHandle: "c1"
 	};
 
 	test("works", async function () {
 		let job = await Job.create(newJob);
-		console.log(job);
-		expect(job).toContain(newJob);
+		expect(job).toMatchObject(newJob);
 
 		const result = await db.query(
-			`SELECT id, title, salary, equity, company_handle AS 'companyHandle'
+			`SELECT id, title, salary, equity, company_handle AS "companyHandle"
            FROM jobs
            WHERE title = 'New Job'`
 		);
-		expect(result.rows).toEqual([{ id: expect.any(Number), title: "New Job", salary: 50000, equity: 0.0, companyHandle: "new" }]);
+		console.log(result);
+		expect(result.rows).toEqual([{ id: expect.any(Number), title: "New Job", salary: 50000, equity: "0.0", companyHandle: "c1" }]);
 	});
 
-	// test("bad request with dupe", async function () {
-	// 	try {
-	// 		await Job.create(newJob);
-	// 		await Job.create(newJob);
-	// 		fail();
-	// 	} catch (err) {
-	// 		expect(err instanceof BadRequestError).toBeTruthy();
-	// 	}
-	// });
+	test("bad request with dupe", async function () {
+		try {
+			await Job.create(newJob);
+			await Job.create(newJob);
+			fail();
+		} catch (err) {
+			expect(err instanceof BadRequestError).toBeTruthy();
+		}
+	});
 });
 
 /************************************** findAll */

@@ -16,14 +16,12 @@ class Job {
 	 * */
 
 	static async create({ title, salary, equity, companyHandle }) {
-		console.log(companyHandle);
 		const duplicateCheck = await db.query(
 			`SELECT title
            FROM jobs
            WHERE title = $1 AND company_handle=$2`,
 			[title, companyHandle]
 		);
-		console.log(duplicateCheck);
 
 		if (duplicateCheck.rows[0]) throw new BadRequestError(`Duplicate job: ${title}`);
 
@@ -35,7 +33,7 @@ class Job {
 			[title, salary, equity, companyHandle]
 		);
 		const job = result.rows[0];
-
+		console.log(job);
 		return job;
 	}
 
