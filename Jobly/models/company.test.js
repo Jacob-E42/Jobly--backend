@@ -5,7 +5,10 @@ const { BadRequestError, NotFoundError } = require("../expressError");
 const Company = require("./company.js");
 const { commonBeforeAll, commonBeforeEach, commonAfterEach, commonAfterAll } = require("./_testCommon");
 
-beforeAll(commonBeforeAll);
+beforeAll(function (done) {
+	console.debug("hello");
+	commonBeforeAll(done);
+});
 beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
@@ -108,7 +111,8 @@ describe("findAll", function () {
 				description: "Desc3",
 				numEmployees: 3,
 				logoUrl: "http://c3.img"
-			}
+			},
+			{ handle: "c4", name: "Company1", numEmployees: 10, description: "Desc4", logoUrl: "http://c1.img" }
 		]);
 		companies = await Company.findAll({ name: "C", maxEmployees: 2 });
 		expect(companies).toEqual([

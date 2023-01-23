@@ -4,9 +4,9 @@ const { BadRequestError } = require("../expressError");
   Take data provided in an object and use it to return a SQL appropriate string 
   of specific columns to update in an UPDATE statement. 
 
-  {firstName, lastName} -> {setCols: `first_name=$1, last_name=$2`, values: ['John', 'Smith']}
+  {firstName: "John", lastName: "Smith"} -> {setCols: `first_name=$1, last_name=$2`, values: ['John', 'Smith']}
 
-  An optional jsToSql paramter is an object which has the names of JS keys and the value set to the proper SQL equivalent.
+  The jsToSql paramter is an object which has the names of JS keys and the value set to the proper SQL equivalent.
   Ex: {firstName: "first_name"}
 
   If provided, the setCols string will use the SQL equivalent strings

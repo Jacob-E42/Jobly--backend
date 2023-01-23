@@ -62,8 +62,6 @@ class Company {
 		return companies.rows;
 	}
 
-	static async findSome(name = null, minEmployees = null, maxEmployees = null) {}
-
 	/** Given a company handle, return data about company.
 	 *
 	 * Returns { handle, name, description, numEmployees, logoUrl, jobs }

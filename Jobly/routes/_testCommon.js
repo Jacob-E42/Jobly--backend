@@ -5,7 +5,8 @@ const User = require("../models/user");
 const Company = require("../models/company");
 const { createToken } = require("../helpers/tokens");
 
-async function commonBeforeAll() {
+async function commonBeforeAll(done) {
+	console.debug("ftuygiojpkjihugyft");
 	// noinspection SqlWithoutWhere
 	await db.query("DELETE FROM users");
 	// noinspection SqlWithoutWhere
@@ -32,6 +33,7 @@ async function commonBeforeAll() {
 		description: "Desc3",
 		logoUrl: "http://c3.img"
 	});
+
 	await Company.create({
 		handle: "c4",
 		name: "Company1",
@@ -39,6 +41,7 @@ async function commonBeforeAll() {
 		description: "Desc4",
 		logoUrl: "http://c1.img"
 	});
+	console.debug(co, "fjdsoiafiehafoisdapfpweihf");
 
 	await User.register({
 		username: "u1",
@@ -64,6 +67,7 @@ async function commonBeforeAll() {
 		password: "password3",
 		isAdmin: false
 	});
+	done();
 }
 
 async function commonBeforeEach() {
