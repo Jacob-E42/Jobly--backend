@@ -80,18 +80,18 @@ function sqlForJobsFilters(searchFilters) {
 	// we can generate the right SQL
 
 	if (title !== undefined) {
-		queryValues.push(title);
-		whereExpressions.push(`num_employees >= $${queryValues.length}`);
+		queryValues.push(`%${title}%`);
+		whereExpressions.push(`title ILIKE $${queryValues.length}`);
 	}
 
 	if (minSalary !== undefined) {
 		queryValues.push(minSalary);
-		whereExpressions.push(`num_employees <= $${queryValues.length}`);
+		whereExpressions.push(`salary <=$${queryValues.length}`);
 	}
 
 	if (hasEquity !== undefined) {
 		queryValues.push(`%${hasEquity}%`);
-		whereExpressions.push(`name ILIKE $${queryValues.length}`);
+		whereExpressions.push(`equity !=$${queryValues.length}`);
 	}
 
 	return {

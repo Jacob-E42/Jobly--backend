@@ -44,6 +44,7 @@ class Job {
 	static async findAll(filters = {}) {
 		//uses helper method to get a list of where expressions for each filter, and a list of corresponding values
 		const { whereExpressions, values } = sqlForJobsFilters(filters);
+
 		let query = `SELECT id, title, salary, equity, company_handle AS "companyHandle"
                   FROM jobs`;
 

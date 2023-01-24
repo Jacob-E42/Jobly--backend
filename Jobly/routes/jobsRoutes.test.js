@@ -85,81 +85,86 @@ describe("GET /jobs", function () {
 		});
 	});
 
-	// 	describe("uses filters accurately", function () {
-	// 		test("name filter works", async function () {
-	// 			let resp = await request(app).get("/companies/").query({ name: "C" });
-	// 			console.log(resp.body);
-	// 			expect(resp.body.companies.length).toBe(4);
-	// 			resp = await request(app).get("/companies").query({ name: "pan" });
-	// 			expect(resp.body.companies.length).toBe(1);
-	// 			expect(resp.body).toEqual({
-	// 				companies: [{ handle: "c4", name: "Company1", numEmployees: 10, description: "Desc4", logoUrl: "http://c1.img" }]
-	// 			});
-	// 			resp = await request(app).get("/companies").query({ name: "sss" });
-	// 			expect(resp.body.companies.length).toBe(0);
-	// 		});
-	// 		test("minEmployees filter works", async function () {
-	// 			let resp = await request(app).get("/companies").query({ minEmployees: 3 });
-	// 			expect(resp.body.companies.length).toBe(2);
-	// 			expect(resp.body).toEqual({
-	// 				companies: [
-	// 					{ handle: "c3", name: "C3", numEmployees: 3, description: "Desc3", logoUrl: "http://c3.img" },
-	// 					{ handle: "c4", name: "Company1", numEmployees: 10, description: "Desc4", logoUrl: "http://c1.img" }
-	// 				]
-	// 			});
-	// 			resp = await request(app).get("/companies").query({ minEmployees: 15 });
-	// 			expect(resp.body.companies.length).toBe(0);
-	// 		});
-	// 		test("maxEmployees filter works", async function () {
-	// 			let resp = await request(app).get("/companies").query({ maxEmployees: 3 });
-	// 			expect(resp.body.companies.length).toBe(3);
-	// 			expect(resp.body).toEqual({
-	// 				companies: [
-	// 					{
-	// 						handle: "c1",
-	// 						name: "C1",
-	// 						description: "Desc1",
-	// 						numEmployees: 1,
-	// 						logoUrl: "http://c1.img"
-	// 					},
-	// 					{
-	// 						handle: "c2",
-	// 						name: "C2",
-	// 						description: "Desc2",
-	// 						numEmployees: 2,
-	// 						logoUrl: "http://c2.img"
-	// 					},
-	// 					{
-	// 						handle: "c3",
-	// 						name: "C3",
-	// 						description: "Desc3",
-	// 						numEmployees: 3,
-	// 						logoUrl: "http://c3.img"
-	// 					}
-	// 				]
-	// 			});
-	// 			resp = await request(app).get("/companies").query({ maxEmployees: 0 });
-	// 			expect(resp.body.companies.length).toBe(0);
-	// 		});
-	// 		test("minEmployees cannot be larger than maxEmployees", async function () {
-	// 			let resp = await request(app).get("/companies").query({ minEmployees: 3, maxEmployees: 1 });
-	// 			expect(resp.statusCode).toEqual(400);
-	// 		});
-	// 		test("request with inappropriate filters fails w/ 400", async function () {
-	// 			let resp = await request(app).get("/companies").query({ pickles: "gerkin" });
+	describe("uses filters accurately", function () {
+		test("title filter works", async function () {
+			let resp = await request(app).get(`/jobs`).query({ title: "J" });
+			console.log(resp.body);
+			expect(resp.body.jobs.length).toBe(3);
+			resp = await request(app).get("/jobs").query({ title: "1" });
+			expect(resp.body.jobs.length).toBe(1);
+			expect(resp.body).toEqual({
+				jobs: [
+					{
+						id: 1,
+						title: "Job1",
+						salary: 10000,
+						equity: "0.0",
+						companyHandle: "c1"
+					}
+				]
+			});
+			resp = await request(app).get("/jobs").query({ name: "s" });
+			expect(resp.body.jobs).toBe(undefined);
+		});
+		// test("minEmployees filter works", async function () {
+		// 	let resp = await request(app).get("/companies").query({ minEmployees: 3 });
+		// 	expect(resp.body.companies.length).toBe(2);
+		// 	expect(resp.body).toEqual({
+		// 		companies: [
+		// 			{ handle: "c3", name: "C3", numEmployees: 3, description: "Desc3", logoUrl: "http://c3.img" },
+		// 			{ handle: "c4", name: "Company1", numEmployees: 10, description: "Desc4", logoUrl: "http://c1.img" }
+		// 		]
+		// 	});
+		// 	resp = await request(app).get("/companies").query({ minEmployees: 15 });
+		// 	expect(resp.body.companies.length).toBe(0);
+		// });
+		// test("maxEmployees filter works", async function () {
+		// 	let resp = await request(app).get("/companies").query({ maxEmployees: 3 });
+		// 	expect(resp.body.companies.length).toBe(3);
+		// 	expect(resp.body).toEqual({
+		// 		companies: [
+		// 			{
+		// 				handle: "c1",
+		// 				name: "C1",
+		// 				description: "Desc1",
+		// 				numEmployees: 1,
+		// 				logoUrl: "http://c1.img"
+		// 			},
+		// 			{
+		// 				handle: "c2",
+		// 				name: "C2",
+		// 				description: "Desc2",
+		// 				numEmployees: 2,
+		// 				logoUrl: "http://c2.img"
+		// 			},
+		// 			{
+		// 				handle: "c3",
+		// 				name: "C3",
+		// 				description: "Desc3",
+		// 				numEmployees: 3,
+		// 				logoUrl: "http://c3.img"
+		// 			}
+		// 		]
+		// 	});
+		// 	resp = await request(app).get("/companies").query({ maxEmployees: 0 });
+		// 	expect(resp.body.companies.length).toBe(0);
+		// });
 
-	// 			expect(resp.statusCode).toEqual(400);
-	// 		});
-	// 	});
+		test("request with inappropriate filters fails w/ 400", async function () {
+			let resp = await request(app).get("/jobs").query({ pickles: "gerkin" });
 
-	// 	test("fails: test next() handler", async function () {
-	// 		// there's no normal failure event which will cause this route to fail ---
-	// 		// thus making it hard to test that the error-handler works with it. This
-	// 		// should cause an error, all right :)
-	// 		await db.query("DROP TABLE companies CASCADE");
-	// 		const resp = await request(app).get("/companies").set("authorization", `Bearer ${u1Token}`);
-	// 		expect(resp.statusCode).toEqual(500);
-	// 	});
+			expect(resp.statusCode).toEqual(400);
+		});
+	});
+
+	test("fails: test next() handler", async function () {
+		// there's no normal failure event which will cause this route to fail ---
+		// thus making it hard to test that the error-handler works with it. This
+		// should cause an error, all right :)
+		await db.query("DROP TABLE companies CASCADE");
+		const resp = await request(app).get("/companies").set("authorization", `Bearer ${u1Token}`);
+		expect(resp.statusCode).toEqual(500);
+	});
 });
 
 /************************************** GET /companies/:handle */
