@@ -15,11 +15,11 @@ const { JsonWebTokenError } = require("jsonwebtoken");
 
 const router = new express.Router();
 
-/** POST / { company } =>  { company }
+/** POST / { job } =>  { job }
  *
- * company should be { handle, name, description, numEmployees, logoUrl }
+ * company should be { title, salary, equity, companyHandle }
  *
- * Returns { handle, name, description, numEmployees, logoUrl }
+ * Returns { id, title, salary, equity, companyHandle }
  *
  * Authorization required: login
  */
