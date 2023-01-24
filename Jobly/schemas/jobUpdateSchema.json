@@ -25,6 +25,7 @@
 			"examples": ["0.2"]
 		}
 	},
+	"additionalProperties": false,
 	"examples": [
 		{
 			"title": "Job Title",

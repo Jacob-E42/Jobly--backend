@@ -99,7 +99,6 @@ class Job {
                       SET ${setCols} 
                       WHERE id = ${idVarIdx} 
                       RETURNING id, title, salary, equity, company_handle AS "companyHandle"`;
-		console.log(querySql);
 		const result = await db.query(querySql, [...values, id]);
 		const job = result.rows[0];
 
