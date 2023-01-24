@@ -12,28 +12,27 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
-/************************************** POST /companies */
+/************************************** POST /jobs */
 
-describe("POST /companies", function () {
-	const newCompany = {
-		handle: "new",
-		name: "New",
-		logoUrl: "http://new.img",
-		description: "DescNew",
-		numEmployees: 10
+describe("POST /jobs", function () {
+	const newJob = {
+		title: "New Job",
+		salary: 50000,
+		equity: "0.0",
+		companyHandle: "c1"
 	};
 
 	test("ok for admin users", async function () {
-		const resp = await request(app).post("/companies").send(newCompany).set("authorization", `Bearer ${adminToken}`);
+		const resp = await request(app).post("/jobs").send(newJob).set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(201);
 		expect(resp.body).toEqual({
-			company: newCompany
+			job: { id: expect.any(Number), ...newJob }
 		});
 	});
 
 	test("bad request with missing data", async function () {
 		const resp = await request(app)
-			.post("/companies")
+			.post("/jobs")
 			.send({
 				handle: "new",
 				numEmployees: 10
@@ -44,10 +43,10 @@ describe("POST /companies", function () {
 
 	test("bad request with invalid data", async function () {
 		const resp = await request(app)
-			.post("/companies")
+			.post("/jobs")
 			.send({
-				...newCompany,
-				logoUrl: "not-a-url"
+				...newJob,
+				title: 47
 			})
 			.set("authorization", `Bearer ${adminToken}`);
 		expect(resp.statusCode).toEqual(400);
