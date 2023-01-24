@@ -86,7 +86,7 @@ function sqlForJobsFilters(searchFilters) {
 
 	if (minSalary !== undefined) {
 		queryValues.push(minSalary);
-		whereExpressions.push(`salary <=$${queryValues.length}`);
+		whereExpressions.push(`salary >=$${queryValues.length}`);
 	}
 
 	if (hasEquity !== undefined) {
