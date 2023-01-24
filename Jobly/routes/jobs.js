@@ -72,22 +72,21 @@ router.get("/", async function (req, res, next) {
 	}
 });
 
-// /** GET /[handle]  =>  { company }
-//  *
-//  *  Company is { handle, name, description, numEmployees, logoUrl, jobs }
-//  *   where jobs is [{ id, title, salary, equity }, ...]
-//  *
-//  * Authorization required: none
-//  */
+/** GET /[id]  =>  { job }
+ *
+ *  Job is { id, title, salary, equity, companyHandle }
+ *
+ * Authorization required: none
+ */
 
-// router.get("/:handle", async function (req, res, next) {
-// 	try {
-// 		const company = await Company.get(req.params.handle);
-// 		return res.json({ company });
-// 	} catch (err) {
-// 		return next(err);
-// 	}
-// });
+router.get("/:id", async function (req, res, next) {
+	try {
+		const job = await Job.get(req.params.id);
+		return res.json({ job });
+	} catch (err) {
+		return next(err);
+	}
+});
 
 // /** PATCH /[handle] { fld1, fld2, ... } => { company }
 //  *
