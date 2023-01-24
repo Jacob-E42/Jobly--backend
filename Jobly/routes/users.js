@@ -114,4 +114,15 @@ router.delete("/:username", ensureLoggedIn, ensureAdminOrThatUser, async functio
 	}
 });
 
+router.post("/:username/jobs/:id", ensureAdminOrThatUser, async function (req, res, next) {
+	try {
+		const { username, id } = req.params;
+		const jobId = await User.apply(username, id);
+		if (!jobId) throw new BadRequestError("Invalid username or Id");
+		res.status(201).json({ applied: jobId });
+	} catch (err) {
+		return next(err);
+	}
+});
+
 module.exports = router;
