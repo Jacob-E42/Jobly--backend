@@ -181,7 +181,8 @@ describe("GET /companies/:handle", function () {
 				name: "C1",
 				description: "Desc1",
 				numEmployees: 1,
-				logoUrl: "http://c1.img"
+				logoUrl: "http://c1.img",
+				jobs: [{ equity: "0.0", id: 1, salary: 10000, title: "Job1" }]
 			}
 		});
 	});
