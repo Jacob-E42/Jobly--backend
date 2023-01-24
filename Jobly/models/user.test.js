@@ -130,7 +130,8 @@ describe("get", function () {
 			firstName: "U1F",
 			lastName: "U1L",
 			email: "u1@email.com",
-			isAdmin: false
+			isAdmin: false,
+			jobs: [1]
 		});
 	});
 
@@ -221,7 +222,7 @@ describe("remove", function () {
 
 describe("apply", function () {
 	test("works for admin", async function () {
-		await User.apply("u1", 1);
+		await User.apply("u2", 1);
 		const res = await db.query(`SELECT username FROM applications WHERE username='u1'`);
 		expect(res.rows.length).toEqual(1);
 	});

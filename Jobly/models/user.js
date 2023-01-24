@@ -96,6 +96,7 @@ class User {
                   last_name AS "lastName",
                   email,
                   is_admin AS "isAdmin"
+                  
            FROM users
            ORDER BY username`
 		);
@@ -122,10 +123,19 @@ class User {
            WHERE username = $1`,
 			[username]
 		);
-
 		const user = userRes.rows[0];
 
 		if (!user) throw new NotFoundError(`No user: ${username}`);
+
+		const jobsRes = await db.query(
+			`
+    SELECT job_id
+    FROM applications
+    WHERE username=$1
+    `,
+			[username]
+		);
+		if (jobsRes.rowCount > 0) user.jobs = jobsRes.rows.map((appliction) => appliction.job_id);
 
 		return user;
 	}

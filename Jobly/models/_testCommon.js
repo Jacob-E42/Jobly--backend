@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 
 const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
+const User = require("./user.js");
 
 async function commonBeforeAll() {
 	await db.query("DELETE FROM jobs");
@@ -37,6 +38,7 @@ async function commonBeforeAll() {
          ('job2', '10000', .2, 'c2'),
          ('job3', '100000', 0.0, 'c3')
          RETURNING id, title`);
+	await User.apply("u1", 1);
 }
 
 async function commonBeforeEach() {
