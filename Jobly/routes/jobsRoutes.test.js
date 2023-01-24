@@ -253,21 +253,21 @@ describe("PATCH /jobs/:id", function () {
 	});
 });
 
-// /************************************** DELETE /companies/:handle */
+/************************************** DELETE /companies/:handle */
 
-// describe("DELETE /companies/:handle", function () {
-// 	test("works for admin users", async function () {
-// 		const resp = await request(app).delete(`/companies/c1`).set("authorization", `Bearer ${adminToken}`);
-// 		expect(resp.body).toEqual({ deleted: "c1" });
-// 	});
+describe("DELETE /jobs/:id", function () {
+	test("works for admin users", async function () {
+		const resp = await request(app).delete(`/jobs/1`).set("authorization", `Bearer ${adminToken}`);
+		expect(resp.body).toEqual({ deleted: "1" });
+	});
 
-// 	test("unauth for anon", async function () {
-// 		const resp = await request(app).delete(`/companies/c1`);
-// 		expect(resp.statusCode).toEqual(401);
-// 	});
+	test("unauth for anon", async function () {
+		const resp = await request(app).delete(`/jobs/1`);
+		expect(resp.statusCode).toEqual(401);
+	});
 
-// 	test("not found for no such company", async function () {
-// 		const resp = await request(app).delete(`/companies/nope`).set("authorization", `Bearer ${adminToken}`);
-// 		expect(resp.statusCode).toEqual(404);
-// 	});
-// });
+	test("not found for no such job", async function () {
+		const resp = await request(app).delete(`/job/0`).set("authorization", `Bearer ${adminToken}`);
+		expect(resp.statusCode).toEqual(404);
+	});
+});
