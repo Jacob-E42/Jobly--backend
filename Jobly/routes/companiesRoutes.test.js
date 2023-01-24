@@ -96,7 +96,6 @@ describe("GET /companies", function () {
 	describe("uses filters accurately", function () {
 		test("name filter works", async function () {
 			let resp = await request(app).get("/companies/").query({ name: "C" });
-			console.log(resp.body);
 			expect(resp.body.companies.length).toBe(4);
 			resp = await request(app).get("/companies").query({ name: "pan" });
 			expect(resp.body.companies.length).toBe(1);
@@ -188,14 +187,14 @@ describe("GET /companies/:handle", function () {
 	});
 
 	test("works for anon: company w/o jobs", async function () {
-		const resp = await request(app).get(`/companies/c2`);
+		const resp = await request(app).get(`/companies/c4`);
 		expect(resp.body).toEqual({
 			company: {
-				handle: "c2",
-				name: "C2",
-				description: "Desc2",
-				numEmployees: 2,
-				logoUrl: "http://c2.img"
+				handle: "c4",
+				name: "Company1",
+				description: "Desc4",
+				numEmployees: 10,
+				logoUrl: "http://c1.img"
 			}
 		});
 	});

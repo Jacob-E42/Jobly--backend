@@ -114,7 +114,7 @@ router.delete("/:username", ensureLoggedIn, ensureAdminOrThatUser, async functio
 	}
 });
 
-router.post("/:username/jobs/:id", ensureAdminOrThatUser, async function (req, res, next) {
+router.post("/:username/jobs/:id", ensureLoggedIn, ensureAdminOrThatUser, async function (req, res, next) {
 	try {
 		const { username, id } = req.params;
 		const jobId = await User.apply(username, id);

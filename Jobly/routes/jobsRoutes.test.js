@@ -158,7 +158,6 @@ describe("GET /jobs", function () {
 				]
 			});
 			resp = await request(app).get("/jobs").query({ hasEquity: false });
-			console.log(resp.body);
 			expect(resp.body.jobs.length).toBe(1);
 			expect(resp.body).toEqual({
 				jobs: [

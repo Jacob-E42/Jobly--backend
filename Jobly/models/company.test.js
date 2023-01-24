@@ -78,7 +78,8 @@ describe("findAll", function () {
 				description: "Desc3",
 				numEmployees: 3,
 				logoUrl: "http://c3.img"
-			}
+			},
+			{ handle: "c4", name: "Company1", numEmployees: 10, description: "Desc4", logoUrl: "http://c1.img" }
 		]);
 	});
 	test("works: with filter", async function () {
@@ -92,7 +93,7 @@ describe("findAll", function () {
 				logoUrl: "http://c1.img"
 			}
 		]);
-		//there should be 3 here
+
 		companies = await Company.findAll({ minEmployees: 2 });
 		expect(companies).toEqual([
 			{
@@ -141,7 +142,15 @@ describe("get", function () {
 			name: "C1",
 			description: "Desc1",
 			numEmployees: 1,
-			logoUrl: "http://c1.img"
+			logoUrl: "http://c1.img",
+			jobs: [
+				{
+					equity: "0.5",
+					id: 1,
+					salary: 50000,
+					title: "job1"
+				}
+			]
 		});
 	});
 

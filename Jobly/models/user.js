@@ -227,8 +227,7 @@ class User {
     `,
 			[username, jobId]
 		);
-
-		return result.rows[0];
+		return result.rows[0].job_id;
 	}
 }
 

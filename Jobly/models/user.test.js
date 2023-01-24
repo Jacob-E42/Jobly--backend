@@ -231,7 +231,6 @@ describe("apply", function () {
 		try {
 			await User.apply("giraffe", 1);
 		} catch (err) {
-			console.error(err);
 			expect(err instanceof NotFoundError).toBeTruthy();
 		}
 	});
@@ -240,7 +239,6 @@ describe("apply", function () {
 		try {
 			await User.apply("u1", -7);
 		} catch (err) {
-			console.error(err);
 			expect(err instanceof NotFoundError).toBeTruthy();
 		}
 	});

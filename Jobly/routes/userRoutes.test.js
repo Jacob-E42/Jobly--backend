@@ -276,3 +276,24 @@ describe("DELETE /users/:username", function () {
 		expect(resp.statusCode).toEqual(404);
 	});
 });
+
+describe("POST /users/:username/jobs/:id", function () {
+	test("works for admin users or that user", async function () {
+		const resp = await request(app).post(`/users/u1/jobs/1`).set("authorization", `Bearer ${u1Token}`);
+		expect(resp.body).toEqual({ applied: 1 });
+	});
+
+	test("unauth for anon", async function () {
+		const resp = await request(app).post(`/users/u1/jobs/1`);
+		expect(resp.statusCode).toEqual(401);
+	});
+
+	test("not found if user missing", async function () {
+		const resp = await request(app).post(`/users/nope/jobs/1`).set("authorization", `Bearer ${adminToken}`);
+		expect(resp.statusCode).toEqual(404);
+	});
+	test("not found if jobId missing", async function () {
+		const resp = await request(app).post(`/users/u1/jobs/0`).set("authorization", `Bearer ${adminToken}`);
+		expect(resp.statusCode).toEqual(404);
+	});
+});

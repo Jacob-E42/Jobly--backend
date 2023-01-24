@@ -63,9 +63,7 @@ router.get("/", async function (req, res, next) {
 				if (hasEquity === true) hasEquity = "true";
 				else hasEquity = "false";
 			}
-			// console.log(params);
 			for (let param in params) {
-				// console.log(acceptedParams.includes(param));
 				if (!acceptedParams.includes(param)) return next(new BadRequestError("That is not a valid query parameter"));
 			}
 			jobs = await Job.findAll(params);
@@ -75,7 +73,6 @@ router.get("/", async function (req, res, next) {
 
 		return res.json({ jobs });
 	} catch (err) {
-		console.error(err);
 		return next(err);
 	}
 });
