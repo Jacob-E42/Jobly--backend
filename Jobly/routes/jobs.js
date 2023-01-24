@@ -58,6 +58,11 @@ router.get("/", async function (req, res, next) {
 			//only these filters are allowed, otherwise a BadRequestError is thrown
 			const acceptedParams = ["title", "minSalary", "hasEquity"];
 			const params = req.query;
+			if (params.hasEquity) {
+				let { hasEquity } = params;
+				if (hasEquity === true) hasEquity = "true";
+				else hasEquity = "false";
+			}
 			// console.log(params);
 			for (let param in params) {
 				// console.log(acceptedParams.includes(param));

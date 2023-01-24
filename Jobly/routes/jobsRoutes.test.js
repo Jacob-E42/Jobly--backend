@@ -88,7 +88,6 @@ describe("GET /jobs", function () {
 	describe("uses filters accurately", function () {
 		test("title filter works", async function () {
 			let resp = await request(app).get(`/jobs`).query({ title: "J" });
-			console.log(resp.body);
 			expect(resp.body.jobs.length).toBe(3);
 			resp = await request(app).get("/jobs").query({ title: "1" });
 			expect(resp.body.jobs.length).toBe(1);
@@ -137,37 +136,57 @@ describe("GET /jobs", function () {
 			resp = await request(app).get("/jobs").query({ minSalary: 60000 });
 			expect(resp.body.jobs.length).toBe(1);
 		});
-		// test("maxEmployees filter works", async function () {
-		// 	let resp = await request(app).get("/companies").query({ maxEmployees: 3 });
-		// 	expect(resp.body.companies.length).toBe(3);
-		// 	expect(resp.body).toEqual({
-		// 		companies: [
-		// 			{
-		// 				handle: "c1",
-		// 				name: "C1",
-		// 				description: "Desc1",
-		// 				numEmployees: 1,
-		// 				logoUrl: "http://c1.img"
-		// 			},
-		// 			{
-		// 				handle: "c2",
-		// 				name: "C2",
-		// 				description: "Desc2",
-		// 				numEmployees: 2,
-		// 				logoUrl: "http://c2.img"
-		// 			},
-		// 			{
-		// 				handle: "c3",
-		// 				name: "C3",
-		// 				description: "Desc3",
-		// 				numEmployees: 3,
-		// 				logoUrl: "http://c3.img"
-		// 			}
-		// 		]
-		// 	});
-		// 	resp = await request(app).get("/companies").query({ maxEmployees: 0 });
-		// 	expect(resp.body.companies.length).toBe(0);
-		// });
+		test("hasEquity filter works", async function () {
+			let resp = await request(app).get("/jobs").query({ hasEquity: true });
+			expect(resp.body.jobs.length).toBe(2);
+			expect(resp.body).toEqual({
+				jobs: [
+					{
+						id: 2,
+						title: "Job2",
+						salary: 50000,
+						equity: "0.2",
+						companyHandle: "c2"
+					},
+					{
+						id: 3,
+						title: "Job3",
+						salary: 100000,
+						equity: "0.7",
+						companyHandle: "c3"
+					}
+				]
+			});
+			resp = await request(app).get("/jobs").query({ hasEquity: false });
+			console.log(resp.body);
+			expect(resp.body.jobs.length).toBe(1);
+			expect(resp.body).toEqual({
+				jobs: [
+					{
+						id: 1,
+						title: "Job1",
+						salary: 10000,
+						equity: "0.0",
+						companyHandle: "c1"
+					}
+				]
+			});
+		});
+
+		test("works: filtering on 2 filters", async function () {
+			const resp = await request(app).get(`/jobs`).query({ minSalary: 50000, title: "3" });
+			expect(resp.body).toEqual({
+				jobs: [
+					{
+						id: 3,
+						title: "Job3",
+						salary: 100000,
+						equity: "0.7",
+						companyHandle: "c3"
+					}
+				]
+			});
+		});
 
 		test("request with inappropriate filters fails w/ 400", async function () {
 			let resp = await request(app).get("/jobs").query({ pickles: "gerkin" });

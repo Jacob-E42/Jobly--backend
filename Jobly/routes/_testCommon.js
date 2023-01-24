@@ -8,7 +8,6 @@ const { create } = require("../models/company");
 const Job = require("../models/job.js");
 
 async function commonBeforeAll() {
-	console.debug("ftuygiojpkjihugyft");
 	// noinspection SqlWithoutWhere
 	await db.query("DELETE FROM users");
 	// noinspection SqlWithoutWhere

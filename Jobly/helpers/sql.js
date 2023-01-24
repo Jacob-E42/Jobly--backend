@@ -90,8 +90,8 @@ function sqlForJobsFilters(searchFilters) {
 	}
 
 	if (hasEquity !== undefined) {
-		queryValues.push(`%${hasEquity}%`);
-		whereExpressions.push(`equity !=$${queryValues.length}`);
+		const hasEquityWhereExpression = hasEquity == "true" ? `equity !='0.0'` : `equity ='0.0'`;
+		whereExpressions.push(hasEquityWhereExpression);
 	}
 
 	return {
