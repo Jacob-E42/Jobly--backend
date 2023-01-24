@@ -39,38 +39,38 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
 	}
 });
 
-// /** GET /  =>
-//  *   { companies: [ { handle, name, description, numEmployees, logoUrl }, ...] }
-//  *
-//  * Can filter on provided search filters:
-//  * - minEmployees
-//  * - maxEmployees
-//  * - name (will find case-insensitive, partial matches)
-//  *
-//  * Authorization required: none
-//  */
+/** GET /  =>
+ *   { jobs: [ { id, title, salary, equity, companyHandle  }, ...] }
+ *
+ * Can filter on provided search filters:
+ * - title (will find case-insensitive, partial matches)
+ * - minSalary
+ * - hasEquity
+ *
+ * Authorization required: none
+ */
 
-// router.get("/", async function (req, res, next) {
-// 	try {
-// 		let companies;
-// 		// if there are filters provided in the search query string
-// 		if (Object.keys(req.query).length !== 0) {
-// 			//only these filters are allowed, otherwise a BadRequestError is thrown
-// 			const acceptedParams = ["name", "minEmployees", "maxEmployees"];
-// 			const params = req.query;
-// 			for (let param in params) {
-// 				if (!acceptedParams.includes(param)) return next(new BadRequestError("That is not a valid query parameter"));
-// 			}
-// 			companies = await Company.findAll(params);
-// 		} else {
-// 			companies = await Company.findAll();
-// 		}
+router.get("/", async function (req, res, next) {
+	try {
+		let jobs;
+		// if there are filters provided in the search query string
+		if (Object.keys(req.query).length !== 0) {
+			//only these filters are allowed, otherwise a BadRequestError is thrown
+			const acceptedParams = ["title", "minSalary", "hasEquity"];
+			const params = req.query;
+			for (let param in params) {
+				if (!acceptedParams.includes(param)) return next(new BadRequestError("That is not a valid query parameter"));
+			}
+			jobs = await Job.findAll(params);
+		} else {
+			jobs = await Job.findAll();
+		}
 
-// 		return res.json({ companies });
-// 	} catch (err) {
-// 		return next(err);
-// 	}
-// });
+		return res.json({ jobs });
+	} catch (err) {
+		return next(err);
+	}
+});
 
 // /** GET /[handle]  =>  { company }
 //  *
