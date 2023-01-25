@@ -11,6 +11,7 @@ const Company = require("../models/company");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
+const companySearchSchema = require("../schemas/companySearchSchema.json");
 
 const router = new express.Router();
 
@@ -23,7 +24,7 @@ const router = new express.Router();
  * Authorization required: login
  */
 
-router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
+router.post("/", ensureAdmin, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, companyNewSchema);
 		if (!validator.valid) {
@@ -52,18 +53,20 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
 router.get("/", async function (req, res, next) {
 	try {
 		let companies;
+		const params = req.query;
 		// if there are filters provided in the search query string
-		if (Object.keys(req.query).length !== 0) {
+		if (Object.keys(params).length !== 0) {
 			//only these filters are allowed, otherwise a BadRequestError is thrown
-			const acceptedParams = ["name", "minEmployees", "maxEmployees"];
-			const params = req.query;
-			for (let param in params) {
-				if (!acceptedParams.includes(param)) return next(new BadRequestError("That is not a valid query parameter"));
+			if (params.maxEmployees) params.maxEmployees = +params.maxEmployees;
+			if (params.minEmployees) params.minEmployees = +params.minEmployees;
+
+			const validator = jsonschema.validate(params, companySearchSchema);
+			if (!validator.valid) {
+				const errs = validator.errors.map((e) => e.stack);
+				throw new BadRequestError(errs);
 			}
-			companies = await Company.findAll(params);
-		} else {
-			companies = await Company.findAll();
 		}
+		companies = await Company.findAll(params);
 
 		return res.json({ companies });
 	} catch (err) {
