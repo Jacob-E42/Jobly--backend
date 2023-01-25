@@ -23,7 +23,7 @@ const router = express.Router();
  * This returns the newly created user and an authentication token for them:
  *  {user: { username, firstName, lastName, email, isAdmin }, token }
  *
- * Authorization required: login
+ * Authorization required: admin
  **/
 
 router.post("/", ensureAdmin, async function (req, res, next) {
@@ -46,7 +46,7 @@ router.post("/", ensureAdmin, async function (req, res, next) {
  *
  * Returns list of all users.
  *
- * Authorization required: login
+ * Authorization required: admin
  **/
 
 router.get("/", ensureAdmin, async function (req, res, next) {
@@ -62,12 +62,12 @@ router.get("/", ensureAdmin, async function (req, res, next) {
  *
  * Returns { username, firstName, lastName, isAdmin }
  *
- * Authorization required: login
+ * Authorization required: admin or correct user
  **/
 
 router.get("/:username", ensureAdminOrCorrectUser, async function (req, res, next) {
 	try {
-		if (!req.params.username) return next(new BadRequestError("Username is required."));
+		if (!req.params.username) throw new BadRequestError("Username is required.");
 		const user = await User.get(req.params.username);
 		return res.json({ user });
 	} catch (err) {
@@ -82,7 +82,7 @@ router.get("/:username", ensureAdminOrCorrectUser, async function (req, res, nex
  *
  * Returns { username, firstName, lastName, email, isAdmin }
  *
- * Authorization required: login
+ * Authorization required: admin or correct user
  **/
 
 router.patch("/:username", ensureAdminOrCorrectUser, async function (req, res, next) {
@@ -102,7 +102,7 @@ router.patch("/:username", ensureAdminOrCorrectUser, async function (req, res, n
 
 /** DELETE /[username]  =>  { deleted: username }
  *
- * Authorization required: login
+ * Authorization required: admin or correct user
  **/
 
 router.delete("/:username", ensureAdminOrCorrectUser, async function (req, res, next) {
@@ -125,7 +125,6 @@ router.post("/:username/jobs/:id", ensureAdminOrCorrectUser, async function (req
 	try {
 		const { username, id } = req.params;
 		const jobId = await User.apply(username, id);
-		if (!jobId) throw new BadRequestError("Invalid username or Id");
 		res.status(201).json({ applied: jobId });
 	} catch (err) {
 		return next(err);
