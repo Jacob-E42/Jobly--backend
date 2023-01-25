@@ -52,21 +52,21 @@ router.post("/", ensureAdmin, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
 	try {
-		let companies;
 		const params = req.query;
+
 		// if there are filters provided in the search query string
 		if (Object.keys(params).length !== 0) {
-			//only these filters are allowed, otherwise a BadRequestError is thrown
 			if (params.maxEmployees) params.maxEmployees = +params.maxEmployees;
 			if (params.minEmployees) params.minEmployees = +params.minEmployees;
 
+			//only these filters are allowed, otherwise a BadRequestError is thrown
 			const validator = jsonschema.validate(params, companySearchSchema);
 			if (!validator.valid) {
 				const errs = validator.errors.map((e) => e.stack);
 				throw new BadRequestError(errs);
 			}
 		}
-		companies = await Company.findAll(params);
+		const companies = await Company.findAll(params);
 
 		return res.json({ companies });
 	} catch (err) {

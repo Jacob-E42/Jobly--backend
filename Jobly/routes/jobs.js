@@ -11,7 +11,7 @@ const Job = require("../models/job");
 
 const jobNewSchema = require("../schemas/jobNewSchema.json");
 const jobUpdateSchema = require("../schemas/jobUpdateSchema.json");
-const { JsonWebTokenError } = require("jsonwebtoken");
+const jobSearchSchema = require("../schemas/jobSearchSchema.json");
 
 const router = new express.Router();
 
@@ -21,10 +21,10 @@ const router = new express.Router();
  *
  * Returns { id, title, salary, equity, companyHandle }
  *
- * Authorization required: login
+ * Authorization required: admin
  */
 
-router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
+router.post("/", ensureAdmin, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, jobNewSchema);
 		if (!validator.valid) {
@@ -52,24 +52,22 @@ router.post("/", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
 
 router.get("/", async function (req, res, next) {
 	try {
-		let jobs;
+		const params = req.query;
 		// if there are filters provided in the search query string
-		if (Object.keys(req.query).length !== 0) {
+		if (Object.keys(params).length !== 0) {
 			//only these filters are allowed, otherwise a BadRequestError is thrown
-			const acceptedParams = ["title", "minSalary", "hasEquity"];
-			const params = req.query;
-			if (params.hasEquity) {
-				let { hasEquity } = params;
-				if (hasEquity === true) hasEquity = "true";
-				else hasEquity = "false";
+
+			let { hasEquity, minSalary } = params;
+			//we convert hasEquity to a str so it can be compared accurately
+			if (hasEquity) params.hasEquity = String(hasEquity);
+			if (minSalary) params.minSalary = +minSalary;
+			const validator = jsonschema.validate(params, jobSearchSchema);
+			if (!validator.valid) {
+				const errs = validator.errors.map((e) => e.stack);
+				throw new BadRequestError(errs);
 			}
-			for (let param in params) {
-				if (!acceptedParams.includes(param)) return next(new BadRequestError("That is not a valid query parameter"));
-			}
-			jobs = await Job.findAll(params);
-		} else {
-			jobs = await Job.findAll();
 		}
+		const jobs = await Job.findAll(params);
 
 		return res.json({ jobs });
 	} catch (err) {
@@ -101,10 +99,10 @@ router.get("/:id", async function (req, res, next) {
  *
  * Returns { id, title, salary, equity, companyHandle }
  *
- * Authorization required: login and admin
+ * Authorization required: admin
  */
 
-router.patch("/:id", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
+router.patch("/:id", ensureAdmin, async function (req, res, next) {
 	try {
 		const validator = jsonschema.validate(req.body, jobUpdateSchema);
 		if (!validator.valid) {
@@ -121,13 +119,13 @@ router.patch("/:id", ensureLoggedIn, ensureAdmin, async function (req, res, next
 
 /** DELETE /[id]  =>  { deleted: id }
  *
- * Authorization: login and admin
+ * Authorization: admin
  */
 
-router.delete("/:id", ensureLoggedIn, ensureAdmin, async function (req, res, next) {
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
 	try {
 		await Job.remove(req.params.id);
-		return res.json({ deleted: req.params.id });
+		return res.json({ deleted: +req.params.id });
 	} catch (err) {
 		return next(err);
 	}

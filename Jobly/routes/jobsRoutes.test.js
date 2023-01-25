@@ -300,7 +300,7 @@ describe("PATCH /jobs/:id", function () {
 describe("DELETE /jobs/:id", function () {
 	test("works for admin users", async function () {
 		const resp = await request(app).delete(`/jobs/1`).set("authorization", `Bearer ${adminToken}`);
-		expect(resp.body).toEqual({ deleted: "1" });
+		expect(resp.body).toEqual({ deleted: 1 });
 	});
 
 	test("unauth for anon", async function () {
