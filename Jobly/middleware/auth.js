@@ -54,12 +54,12 @@ function ensureAdmin(req, res, next) {
 	}
 }
 
-/** Middleware to use when user must be either: the user whose username mathches the username
+/** Middleware to use when user must be logged in and either: the user whose username mathches the username
  *  provided as a request parameter, or an admin.
  */
-function ensureAdminOrThatUser(req, res, next) {
+function ensureAdminOrCorrectUser(req, res, next) {
 	try {
-		if (!res.locals.user.isAdmin && req.params.username !== res.locals.user.username) throw new UnauthorizedError();
+		if (!res.locals.user || (!res.locals.user.isAdmin && req.params.username !== res.locals.user.username)) throw new UnauthorizedError();
 		return next();
 	} catch (err) {
 		return next(err);
@@ -70,5 +70,5 @@ module.exports = {
 	authenticateJWT,
 	ensureLoggedIn,
 	ensureAdmin,
-	ensureAdminOrThatUser
+	ensureAdminOrCorrectUser
 };
