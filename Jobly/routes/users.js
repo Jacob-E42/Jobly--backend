@@ -114,6 +114,13 @@ router.delete("/:username", ensureAdminOrCorrectUser, async function (req, res, 
 	}
 });
 
+/** POST / { username, jobId }  => { jobId }
+ *
+ * Creates a new job application. Must provide a username and a jobId. The jobId is
+ * returned if successful.
+ *
+ * Authorization required: Admin or Correct User
+ **/
 router.post("/:username/jobs/:id", ensureAdminOrCorrectUser, async function (req, res, next) {
 	try {
 		const { username, id } = req.params;

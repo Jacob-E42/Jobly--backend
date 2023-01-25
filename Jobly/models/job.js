@@ -38,6 +38,11 @@ class Job {
 
 	/** Find all jobs.
 	 *
+	 * searchFilters (all optional):
+	 * - minSalary
+	 * - hasEquity (true returns only jobs with equity > 0, other values ignored)
+	 * - title (will find case-insensitive, partial matches)
+	 *
 	 * Returns [{ id, title, salary, equity, company_handle }, ...]
 	 * */
 
@@ -57,10 +62,9 @@ class Job {
 		return jobs.rows;
 	}
 
-	/** Given a job title and companyHandle, return data about job.
+	/** Given a job id, return data about job.
 	 *
 	 * Returns { id, title, salary, equity, companyHandle }
-	 *   where jobs is [{ id, title, salary, equity, companyHandle }, ...]
 	 *
 	 * Throws NotFoundError if not found.
 	 **/

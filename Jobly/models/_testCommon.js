@@ -4,12 +4,15 @@ const db = require("../db.js");
 const { BCRYPT_WORK_FACTOR } = require("../config");
 const User = require("./user.js");
 
+//Run before all tests. Set up sample data in users, companies and jobs tables.
 async function commonBeforeAll() {
+	//wipe clean jobs table and reset id property to 1
 	await db.query("DELETE FROM jobs");
 	await db.query(`ALTER SEQUENCE jobs_id_seq RESTART`);
 
 	// noinspection SqlWithoutWhere
 	await db.query("DELETE FROM companies");
+
 	// noinspection SqlWithoutWhere
 	await db.query("DELETE FROM users");
 

@@ -70,6 +70,15 @@ function sqlForCompaniesFilters(searchFilters) {
 	};
 }
 
+/*
+    Take in an object of search filters and use them to create an arary of SQL 'Where' expressions and and array of values.
+    searchFilters is an object that should contain on or more of 3 fields: "title", "minSalary" and/or "hasEquity"
+
+    For each filter provided, other than hasEquity, the value is added to the values array and the appropriate SQL statements is added to
+    the array of where expressions.
+
+    EX: {minSalary: 1000} --> {whereExpressions: [`WHERE salary >= $1`], values: [1000]}
+*/
 function sqlForJobsFilters(searchFilters) {
 	let whereExpressions = [];
 	let queryValues = [];
