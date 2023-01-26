@@ -6,7 +6,7 @@ const { BadRequestError } = require("../expressError");
 
   {firstName: "John", lastName: "Smith"} -> {setCols: `first_name=$1, last_name=$2`, values: ['John', 'Smith']}
 
-  The jsToSql paramter is an object which has the names of JS keys and the value set to the proper SQL equivalent.
+  The jsToSql parameter is an object which has the names of JS keys and the value set to the proper SQL equivalent.
   Ex: {firstName: "first_name"}
 
   If provided, the setCols string will use the SQL equivalent strings
@@ -41,6 +41,7 @@ function sqlForCompaniesFilters(searchFilters) {
 	let queryValues = [];
 
 	const { minEmployees, maxEmployees, name } = searchFilters;
+	console.log(minEmployees, maxEmployees, name);
 
 	if (minEmployees > maxEmployees) {
 		throw new BadRequestError("Min employees cannot be greater than max");
@@ -49,6 +50,7 @@ function sqlForCompaniesFilters(searchFilters) {
 	// For each possible search term, add to whereExpressions and queryValues so
 	// we can generate the right SQL
 
+	// '!== undefined' is used because minEmployees might be equal to 0, which is falsy
 	if (minEmployees !== undefined) {
 		queryValues.push(minEmployees);
 		whereExpressions.push(`num_employees >= $${queryValues.length}`);
@@ -63,7 +65,7 @@ function sqlForCompaniesFilters(searchFilters) {
 		queryValues.push(`%${name}%`);
 		whereExpressions.push(`name ILIKE $${queryValues.length}`);
 	}
-
+	console.log(whereExpressions);
 	return {
 		whereExpressions,
 		values: queryValues

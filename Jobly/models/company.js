@@ -49,6 +49,7 @@ class Company {
 	 * */
 
 	static async findAll(filters = {}) {
+		console.log(filters);
 		//uses helper method to get a list of where expressions for each filter, and a list of corresponding values
 		const { whereExpressions, values } = sqlForCompaniesFilters(filters);
 		let query = `SELECT handle,
@@ -63,6 +64,7 @@ class Company {
 			query += " WHERE " + whereExpressions.join(" AND ");
 		}
 		query += ` ORDER BY name`;
+		console.log(query, values);
 		const companies = await db.query(query, values);
 		return companies.rows;
 	}

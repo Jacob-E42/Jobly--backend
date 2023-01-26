@@ -54,22 +54,22 @@ router.get("/", async function (req, res, next) {
 	try {
 		const params = req.query;
 		// if there are filters provided in the search query string
-		if (Object.keys(params).length !== 0) {
-			//only these filters are allowed, otherwise a BadRequestError is thrown
+		// if (Object.keys(params).length !== 0) {
+		//only these filters are allowed, otherwise a BadRequestError is thrown
 
-			let { hasEquity, minSalary } = params;
-			//we convert hasEquity to a str so it can be compared accurately
-			if (hasEquity) params.hasEquity = String(hasEquity);
-			if (minSalary) params.minSalary = +minSalary;
-			const validator = jsonschema.validate(params, jobSearchSchema);
-			if (!validator.valid) {
-				const errs = validator.errors.map((e) => e.stack);
-				throw new BadRequestError(errs);
-			}
+		let { hasEquity, minSalary } = params;
+		//we convert hasEquity to a str so it can be compared accurately
+		if (hasEquity) params.hasEquity = String(hasEquity);
+		if (minSalary) params.minSalary = +minSalary;
+		const validator = jsonschema.validate(params, jobSearchSchema);
+		if (!validator.valid) {
+			const errs = validator.errors.map((e) => e.stack);
+			throw new BadRequestError(errs);
 		}
-		const jobs = await Job.findAll(params);
+		// }
+		// const jobs = await Job.findAll(params)
 
-		return res.json({ jobs });
+		return res.json({ jobs: await Job.findAll(params) });
 	} catch (err) {
 		return next(err);
 	}
@@ -84,8 +84,8 @@ router.get("/", async function (req, res, next) {
 
 router.get("/:id", async function (req, res, next) {
 	try {
-		const job = await Job.get(req.params.id);
-		return res.json({ job });
+		// const job = await Job.get(req.params.id);
+		return res.json({ job: await Job.get(req.params.id) });
 	} catch (err) {
 		return next(err);
 	}
@@ -110,8 +110,7 @@ router.patch("/:id", ensureAdmin, async function (req, res, next) {
 			throw new BadRequestError(errs);
 		}
 
-		const job = await Job.update(req.params.id, req.body);
-		return res.json({ job });
+		return res.json({ job: await Job.update(req.params.id, req.body) });
 	} catch (err) {
 		return next(err);
 	}
